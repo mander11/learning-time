@@ -39,25 +39,44 @@ async function writeQuestion(questionData) {
 
 // Example usage
 async function main() {
-  const sampleQuestion = {
-    path: 'GCP Professional Data Engineer',
-    course: '02 – Preparing for your Professional Data Engineer Journey',
-    courseOrder: 2,
-    module: 'Storing Data',
-    moduleOrder: 3,
-    question: 'Your analysts repeatedly run the same complex queries...',
-    answers: {
-      A: 'Export the frequently queried data into a new table.',
-      B: 'Create a dataset with the data that is frequently queried.',
-      C: 'Create a view of the frequently queried data.',
-      D: 'Export the frequently queried data into Cloud SQL.'
+  const questions = [
+    {
+      path: 'GCP Professional Data Engineer',
+      course: '02 – Preparing for your Professional Data Engineer Journey',
+      courseOrder: 2,
+      module: 'Maintaining and Automating Data Workloads',
+      moduleOrder: 5,
+      question: 'You are running a Dataflow pipeline in production. The input data for this pipeline is occasionally inconsistent. Separately from processing the valid data, you want to efficiently capture the erroneous input data for analysis. What should you do?',
+      answers: {
+        A: 'Create a side output for the erroneous data.',
+        B: 'Re-read the input data and create separate outputs for valid and erroneous data.',
+        C: 'Check for the erroneous data in the logs.',
+        D: 'Read the data once, and split it into two pipelines, one to output valid data and another to output erroneous data.'
+      },
+      status: 'pending'
     },
-    status: 'completed'
-  };
+    {
+      path: 'GCP Professional Data Engineer',
+      course: '02 – Preparing for your Professional Data Engineer Journey',
+      courseOrder: 2,
+      module: 'Maintaining and Automating Data Workloads',
+      moduleOrder: 5,
+      question: 'You run a Cloud SQL instance for a business that requires that the database is accessible for transactions. You need to ensure minimal downtime for database transactions. What should you do?',
+      answers: {
+        A: 'Configure replication.',
+        B: 'Configure backups and increase the number of backups.',
+        C: 'Configure high availability.',
+        D: 'Configure backups.'
+      },
+      status: 'pending'
+    }
+  ];
 
   try {
-    await writeQuestion(sampleQuestion);
-    console.log('Successfully wrote question to Firestore');
+    for (const question of questions) {
+      await writeQuestion(question);
+      console.log('Successfully wrote question to Firestore');
+    }
   } catch (error) {
     console.error('Failed to write question:', error);
   }
