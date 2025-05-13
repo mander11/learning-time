@@ -59,8 +59,10 @@ export default function TestQuestions() {
 
   const currentQuestion = questions[currentIndex];
   const words = currentQuestion.question.trim().split(/\s+/);
-  const visibleText = words.slice(0, visibleCount).join(' ');
-  const done = visibleCount >= words.length;
+  const startIndex = (visibleCount - 1) * WORDS_PER_TAP;
+  const currentChunk = words.slice(startIndex, startIndex + WORDS_PER_TAP);
+  const visibleText = words.slice(0, startIndex + WORDS_PER_TAP).join(' ');
+  const done = startIndex + WORDS_PER_TAP >= words.length;
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
@@ -93,7 +95,9 @@ export default function TestQuestions() {
   };
 
   const revealMore = () => {
-    setVisibleCount(c => Math.min(c + WORDS_PER_TAP, words.length));
+    if (!done) {
+      setVisibleCount(c => c + 1);
+    }
   };
 
   return (
@@ -177,8 +181,7 @@ export default function TestQuestions() {
 
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div 
-          onClick={revealMore}
-          onTouchStart={revealMore}
+          onPointerUp={revealMore}
           onKeyDown={e => [' ', 'ArrowRight'].includes(e.key) && revealMore()}
           role="button"
           tabIndex={0}
