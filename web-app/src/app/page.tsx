@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Home() {
   return (
@@ -49,6 +52,7 @@ export default function Home() {
           >
             Read our docs
           </a>
+          <FirestoreButton />
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
@@ -98,6 +102,42 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+    </div>
+  );
+}
+
+function FirestoreButton() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<any>(null);
+
+  const fetchFromFirestore = async () => {
+    setIsLoading(true);
+    try {
+      // Call our API endpoint instead of directly accessing Firestore
+      const response = await fetch('/api/firestore');
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.error('Error fetching from API:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={fetchFromFirestore}
+        disabled={isLoading}
+        className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto bg-blue-500 text-white hover:bg-blue-600"
+      >
+        {isLoading ? 'Loading...' : 'Fetch Firestore Data'}
+      </button>
+      {data && (
+        <div className="mt-4 p-4 bg-black/[.05] dark:bg-white/[.06] rounded">
+          <pre className="text-xs overflow-auto">{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }
