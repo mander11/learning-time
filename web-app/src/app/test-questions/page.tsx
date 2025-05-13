@@ -66,6 +66,16 @@ export default function TestQuestions() {
     setSelectedAnswer(key);
   };
 
+  const handleCopyQuestion = () => {
+    const answerText = Object.entries(currentQuestion.answers)
+      .map(([key, value]) => `${key}. ${value}`)
+      .join('\n');
+    
+    const textToCopy = `${currentQuestion.question}\n\nWhich option is right? Please explain why others are wrong.\n\n${answerText}`;
+    navigator.clipboard.writeText(textToCopy)
+      .catch(err => console.error('Failed to copy text:', err));
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
@@ -95,7 +105,26 @@ export default function TestQuestions() {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <div className="mb-6">
+        <div className="mb-6 relative">
+          <button
+            onClick={handleCopyQuestion}
+            className="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700"
+            title="Copy question"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+              />
+            </svg>
+          </button>
           <h2 className="text-xl mb-2">{currentQuestion.question}</h2>
           <p className="text-xs text-gray-500 italic mb-4">Which option is right? Please explain why others are wrong.</p>
           <div className="space-y-3">
