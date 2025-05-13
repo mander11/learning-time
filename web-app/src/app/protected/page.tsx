@@ -1,20 +1,16 @@
-"use client";
-
+import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-export default function ProtectedPage() {
-  const { data: session, status } = useSession();
+// Server component that checks auth on the server side
+export default async function ProtectedPage() {
+  // Get session on the server
+  const session = await getServerSession();
   
-  if (status === "loading") {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  }
-  
+  // Redirect if not authenticated
   if (!session) {
-    redirect("/login");
-    return null;
+    redirect("/login?callbackUrl=/protected");
   }
 
   return (
