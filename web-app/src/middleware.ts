@@ -1,22 +1,12 @@
 import { auth } from "@/app/auth";
 import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
 
-type AuthenticatedRequest = NextRequest & {
-  auth: {
-    user?: {
-      name?: string;
-      email?: string;
-      image?: string;
-    } | null;
-  } | null;
-};
- 
-export default auth((req: AuthenticatedRequest) => {
-  const { nextUrl, auth } = req;
-  const isLoggedIn = !!auth?.user;
+// Simple middleware that only protects the /protected routes
+export default auth((req: any) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth?.user;
   
-  // Protect the /protected route
+  // Only protect the /protected routes
   if (nextUrl.pathname.startsWith("/protected")) {
     if (isLoggedIn) {
       return NextResponse.next();
@@ -28,6 +18,7 @@ export default auth((req: AuthenticatedRequest) => {
     return NextResponse.redirect(loginUrl);
   }
   
+  // Allow all other routes to pass through
   return NextResponse.next();
 })
  
