@@ -28,6 +28,7 @@ export default function TestQuestions() {
   const [isInfoExpanded, setIsInfoExpanded] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
   const [visibleAnswerCount, setVisibleAnswerCount] = useState(0);
+  const [canUndo, setCanUndo] = useState(false);
 
   const WORDS_PER_TAP = 4;
 
@@ -49,6 +50,7 @@ export default function TestQuestions() {
     setVisibleCount(0);
     setVisibleAnswerCount(0);
     setSelectedAnswer(null);
+    setCanUndo(false);
   }, [currentIndex]);
 
   if (error) {
@@ -98,12 +100,27 @@ export default function TestQuestions() {
   const revealMore = () => {
     if (!done) {
       setVisibleCount(c => c + 1);
+      setCanUndo(true);
     } else {
       // If question is done, start revealing answers
       const totalAnswers = Object.keys(currentQuestion.answers).length;
       if (visibleAnswerCount < totalAnswers) {
         setVisibleAnswerCount(c => c + 1);
+        setCanUndo(true);
       }
+    }
+  };
+
+  const handleUndo = () => {
+    if (visibleAnswerCount > 0) {
+      setVisibleAnswerCount(c => c - 1);
+    } else if (visibleCount > 0) {
+      setVisibleCount(c => c - 1);
+    }
+    
+    // Disable undo if we're back at the start
+    if (visibleAnswerCount === 1 || (visibleAnswerCount === 0 && visibleCount === 1)) {
+      setCanUndo(false);
     }
   };
 
@@ -187,22 +204,45 @@ export default function TestQuestions() {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <div 
-          onPointerUp={revealMore}
-          onKeyDown={e => [' ', 'ArrowRight'].includes(e.key) && revealMore()}
-          role="button"
-          tabIndex={0}
-          aria-label={currentQuestion.question}
-          className="mb-6 cursor-pointer select-none"
-        >
-          <h2 className="text-xl mb-2 leading-relaxed">
-            {visibleText}
-            {!done && <span className="animate-pulse"> ▋</span>}
-          </h2>
-          {done && visibleAnswerCount < Object.keys(currentQuestion.answers).length && (
-            <p className="text-sm text-gray-500 italic">
-              Tap to reveal answers ({visibleAnswerCount} of {Object.keys(currentQuestion.answers).length})
-            </p>
+        <div className="flex items-center justify-between mb-4">
+          <div
+            onPointerUp={revealMore}
+            onKeyDown={e => [' ', 'ArrowRight'].includes(e.key) && revealMore()}
+            role="button"
+            tabIndex={0}
+            aria-label={currentQuestion.question}
+            className="flex-1 cursor-pointer select-none"
+          >
+            <h2 className="text-xl mb-2 leading-relaxed">
+              {visibleText}
+              {!done && <span className="animate-pulse"> ▋</span>}
+            </h2>
+            {done && visibleAnswerCount < Object.keys(currentQuestion.answers).length && (
+              <p className="text-sm text-gray-500 italic">
+                Tap to reveal answers ({visibleAnswerCount} of {Object.keys(currentQuestion.answers).length})
+              </p>
+            )}
+          </div>
+          {canUndo && (
+            <button
+              onClick={handleUndo}
+              className="ml-4 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Undo last reveal"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                />
+              </svg>
+            </button>
           )}
         </div>
 
