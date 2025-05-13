@@ -22,6 +22,12 @@ export default function Home() {
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <AuthButton />
           <FirestoreButton />
+          <a
+            href="/test-questions"
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+          >
+            Start Practice Questions
+          </a>
         </div>
       </main>
     </div>
