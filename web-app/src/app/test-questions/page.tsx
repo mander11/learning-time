@@ -27,6 +27,7 @@ export default function TestQuestions() {
   const [showCopied, setShowCopied] = useState(false);
   const [isInfoExpanded, setIsInfoExpanded] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
+  const [visibleAnswerCount, setVisibleAnswerCount] = useState(0);
 
   const WORDS_PER_TAP = 4;
 
@@ -43,9 +44,10 @@ export default function TestQuestions() {
       .catch(err => setError(err.message));
   }, []);
 
-  // Reset visible count when question changes
+  // Reset counts when question changes
   useEffect(() => {
     setVisibleCount(0);
+    setVisibleAnswerCount(0);
     setSelectedAnswer(null);
   }, [currentIndex]);
 
@@ -96,6 +98,12 @@ export default function TestQuestions() {
   const revealMore = () => {
     if (!done) {
       setVisibleCount(c => c + 1);
+    } else {
+      // If question is done, start revealing answers
+      const totalAnswers = Object.keys(currentQuestion.answers).length;
+      if (visibleAnswerCount < totalAnswers) {
+        setVisibleAnswerCount(c => c + 1);
+      }
     }
   };
 
@@ -191,22 +199,29 @@ export default function TestQuestions() {
             {visibleText}
             {!done && <span className="animate-pulse"> ▋</span>}
           </h2>
+          {done && visibleAnswerCount < Object.keys(currentQuestion.answers).length && (
+            <p className="text-sm text-gray-500 italic">
+              Tap to reveal answers ({visibleAnswerCount} of {Object.keys(currentQuestion.answers).length})
+            </p>
+          )}
         </div>
 
         {done && (
           <div className="space-y-3">
-            {Object.entries(currentQuestion.answers).map(([key, value]) => (
-              <button
-                key={key}
-                onClick={() => handleAnswerSelect(key)}
-                className={`w-full text-left p-4 rounded-lg border ${
-                  selectedAnswer === key
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <span className="font-medium">{key}.</span> {value}
-              </button>
+            {Object.entries(currentQuestion.answers)
+              .slice(0, visibleAnswerCount)
+              .map(([key, value]) => (
+                <button
+                  key={key}
+                  onClick={() => handleAnswerSelect(key)}
+                  className={`w-full text-left p-4 rounded-lg border ${
+                    selectedAnswer === key
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="font-medium">{key}.</span> {value}
+                </button>
             ))}
           </div>
         )}
