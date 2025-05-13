@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface Question {
   id: string;
@@ -67,6 +68,27 @@ export default function TestQuestions() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-8">
+        <Link
+          href="/"
+          className="inline-flex items-center text-blue-500 hover:text-blue-600"
+        >
+          <svg 
+            className="w-5 h-5 mr-2" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+            />
+          </svg>
+          Back to Home
+        </Link>
+      </div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-2">{currentQuestion.course}</h1>
         <p className="text-gray-600">{currentQuestion.module}</p>
