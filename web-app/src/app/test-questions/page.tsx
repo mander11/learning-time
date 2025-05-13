@@ -26,6 +26,9 @@ export default function TestQuestions() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showCopied, setShowCopied] = useState(false);
   const [isInfoExpanded, setIsInfoExpanded] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  const WORDS_PER_TAP = 4;
 
   useEffect(() => {
     fetch('/api/questions')
@@ -40,6 +43,12 @@ export default function TestQuestions() {
       .catch(err => setError(err.message));
   }, []);
 
+  // Reset visible count when question changes
+  useEffect(() => {
+    setVisibleCount(0);
+    setSelectedAnswer(null);
+  }, [currentIndex]);
+
   if (error) {
     return <div className="p-4">Error: {error}</div>;
   }
@@ -49,18 +58,19 @@ export default function TestQuestions() {
   }
 
   const currentQuestion = questions[currentIndex];
+  const words = currentQuestion.question.trim().split(/\s+/);
+  const visibleText = words.slice(0, visibleCount).join(' ');
+  const done = visibleCount >= words.length;
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
-      setSelectedAnswer(null);
     }
   };
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
-      setSelectedAnswer(null);
     }
   };
 
@@ -80,6 +90,10 @@ export default function TestQuestions() {
         setTimeout(() => setShowCopied(false), 2000);
       })
       .catch(err => console.error('Failed to copy text:', err));
+  };
+
+  const revealMore = () => {
+    setVisibleCount(c => Math.min(c + WORDS_PER_TAP, words.length));
   };
 
   return (
@@ -162,8 +176,22 @@ export default function TestQuestions() {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <div className="mb-6">
-          <h2 className="text-xl mb-2">{currentQuestion.question}</h2>
+        <div 
+          onClick={revealMore}
+          onTouchStart={revealMore}
+          onKeyDown={e => [' ', 'ArrowRight'].includes(e.key) && revealMore()}
+          role="button"
+          tabIndex={0}
+          aria-label={currentQuestion.question}
+          className="mb-6 cursor-pointer select-none"
+        >
+          <h2 className="text-xl mb-2 leading-relaxed">
+            {visibleText}
+            {!done && <span className="animate-pulse"> ▋</span>}
+          </h2>
+        </div>
+
+        {done && (
           <div className="space-y-3">
             {Object.entries(currentQuestion.answers).map(([key, value]) => (
               <button
@@ -179,7 +207,7 @@ export default function TestQuestions() {
               </button>
             ))}
           </div>
-        </div>
+        )}
       </div>
 
       <div className="flex justify-between items-center">
