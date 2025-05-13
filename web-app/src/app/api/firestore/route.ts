@@ -1,33 +1,26 @@
-import { NextResponse } from 'next/server';
+// Force a Node runtime (gRPC doesn't run in the Edge runtime)
+export const runtime = 'nodejs';
 
-// This will be a placeholder for now, eventually you'll add your Firestore imports
-// import { db } from '@/lib/firestore';
+import { NextRequest } from 'next/server';
+import { Firestore } from '@google-cloud/firestore';
 
-export async function GET() {
+// Initialize with env-based credentials
+const db = new Firestore({
+  projectId: process.env.GCP_PROJECT_ID,
+  credentials: {
+    client_email: process.env.GCP_CLIENT_EMAIL,
+    private_key: process.env.GCP_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  },
+});
+
+// GET /api/firestore → returns first 10 docs from the "items" collection
+export async function GET(_req: NextRequest) {
   try {
-    // For now, we'll return mock data
-    // Eventually, this will make the actual Firestore database call
-    
-    // Example of future Firestore implementation:
-    // const snapshot = await db.collection('your-collection').get();
-    // const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
-    // Mock data for now
-    const mockData = {
-      items: [
-        { id: '1', name: 'Item 1', value: 100 },
-        { id: '2', name: 'Item 2', value: 200 },
-        { id: '3', name: 'Item 3', value: 300 },
-      ],
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(mockData);
-  } catch (error) {
-    console.error('Error fetching data from Firestore:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch data from Firestore' },
-      { status: 500 }
-    );
+    const snap = await db.collection('items').limit(10).get();
+    const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return Response.json(data, { status: 200 });
+  } catch (err) {
+    console.error('Error fetching data from Firestore:', err);
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
