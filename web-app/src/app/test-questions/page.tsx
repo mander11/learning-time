@@ -60,7 +60,6 @@ export default function TestQuestions() {
   const currentQuestion = questions[currentIndex];
   const words = currentQuestion.question.trim().split(/\s+/);
   const startIndex = (visibleCount - 1) * WORDS_PER_TAP;
-  const currentChunk = words.slice(startIndex, startIndex + WORDS_PER_TAP);
   const visibleText = words.slice(0, startIndex + WORDS_PER_TAP).join(' ');
   const done = startIndex + WORDS_PER_TAP >= words.length;
 
