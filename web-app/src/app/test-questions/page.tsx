@@ -106,12 +106,9 @@ export default function TestQuestions() {
       </div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-2">{currentQuestion.course}</h1>
-        <p className="text-gray-600">{currentQuestion.module}</p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <div className="mb-6 relative">
-          <div className="absolute top-0 right-0 flex items-center">
+        <div className="flex items-center justify-between">
+          <p className="text-gray-600">{currentQuestion.module}</p>
+          <div className="flex items-center ml-4">
             {showCopied && (
               <span className="mr-2 text-sm text-green-600 bg-green-50 px-2 py-1 rounded-md">
                 Copied!
@@ -137,7 +134,13 @@ export default function TestQuestions() {
               </svg>
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="mb-6">
           <h2 className="text-xl mb-2">{currentQuestion.question}</h2>
+          <p className="text-xs text-gray-500 italic mb-4">Which option is right? Please explain why others are wrong.</p>
           <div className="space-y-3">
             {Object.entries(currentQuestion.answers).map(([key, value]) => (
               <button
