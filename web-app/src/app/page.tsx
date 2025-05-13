@@ -3,6 +3,16 @@
 import Image from "next/image";
 import { useState } from "react";
 
+// Define interface for the Firestore data
+interface FirestoreData {
+  items: {
+    id: string;
+    name: string;
+    value: number;
+  }[];
+  timestamp: string;
+}
+
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -108,7 +118,7 @@ export default function Home() {
 
 function FirestoreButton() {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<FirestoreData | null>(null);
 
   const fetchFromFirestore = async () => {
     setIsLoading(true);
