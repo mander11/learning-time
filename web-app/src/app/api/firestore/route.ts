@@ -1,7 +1,7 @@
 // Force a Node runtime (gRPC doesn't run in the Edge runtime)
 export const runtime = 'nodejs';
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
 import { Firestore } from '@google-cloud/firestore';
 
@@ -24,7 +24,7 @@ function getAllowedEmails(): string[] {
 }
 
 // GET /api/firestore → returns first 10 docs from the "items" collection
-export async function GET(req: NextRequest) {
+export async function GET() {
   // Check authentication and authorization
   const session = await getServerSession();
   

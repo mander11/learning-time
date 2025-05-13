@@ -1,6 +1,5 @@
-import NextAuth, { User, Account, Session, DefaultSession } from "next-auth";
+import NextAuth, { Session, DefaultSession } from "next-auth";
 import Google from "next-auth/providers/google";
-import { NextRequest } from "next/server";
 
 // Extend the Session type to include accessToken
 declare module "next-auth" {
@@ -28,7 +27,7 @@ export const auth = NextAuth({
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: any }) {
+    async session({ session, token }: { session: Session; token: Record<string, unknown> }) {
       // Send properties to the client, like an access_token from a provider
       if (token.accessToken) {
         session.accessToken = token.accessToken as string;
