@@ -25,6 +25,7 @@ export default function TestQuestions() {
   const [error, setError] = useState<string | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showCopied, setShowCopied] = useState(false);
+  const [isInfoExpanded, setIsInfoExpanded] = useState(false);
 
   useEffect(() => {
     fetch('/api/questions')
@@ -104,36 +105,59 @@ export default function TestQuestions() {
           Back to Home
         </Link>
       </div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">{currentQuestion.course}</h1>
-        <div className="flex items-center justify-between">
-          <p className="text-gray-600">{currentQuestion.module}</p>
-          <div className="flex items-center ml-4">
-            {showCopied && (
-              <span className="mr-2 text-sm text-green-600 bg-green-50 px-2 py-1 rounded-md">
-                Copied!
-              </span>
-            )}
-            <button
-              onClick={handleCopyQuestion}
-              className="p-2 sm:p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Copy question"
-            >
-              <svg
-                className="w-6 h-6 sm:w-5 sm:h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-                />
-              </svg>
-            </button>
+      <div className="mb-4">
+        <button
+          onClick={() => setIsInfoExpanded(!isInfoExpanded)}
+          className="flex items-center text-xs text-gray-500 hover:text-gray-700 mb-2"
+        >
+          <svg
+            className={`w-4 h-4 mr-1 transform transition-transform ${isInfoExpanded ? 'rotate-90' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+          Course Info
+        </button>
+        
+        {isInfoExpanded && (
+          <div className="pl-5 mb-4 text-sm">
+            <p className="font-medium text-gray-700">{currentQuestion.course}</p>
+            <p className="text-gray-500">{currentQuestion.module}</p>
           </div>
+        )}
+        
+        <div className="flex justify-end">
+          {showCopied && (
+            <span className="mr-2 text-sm text-green-600 bg-green-50 px-2 py-1 rounded-md">
+              Copied!
+            </span>
+          )}
+          <button
+            onClick={handleCopyQuestion}
+            className="p-2 sm:p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Copy question"
+          >
+            <svg
+              className="w-6 h-6 sm:w-5 sm:h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
