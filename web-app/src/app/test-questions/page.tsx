@@ -96,7 +96,8 @@ export default function TestQuestions() {
 
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="mb-6">
-          <h2 className="text-xl mb-4">{currentQuestion.question}</h2>
+          <h2 className="text-xl mb-2">{currentQuestion.question}</h2>
+          <p className="text-xs text-gray-500 italic mb-4">Which option is right? Please explain why others are wrong.</p>
           <div className="space-y-3">
             {Object.entries(currentQuestion.answers).map(([key, value]) => (
               <button
