@@ -1,7 +1,7 @@
 // Force a Node runtime (gRPC doesn't run in the Edge runtime)
 export const runtime = 'nodejs';
 
-import { NextRequest } from 'next/server';
+// No longer need NextRequest import
 import { Firestore } from '@google-cloud/firestore';
 
 // Initialize with env-based credentials
@@ -14,7 +14,7 @@ const db = new Firestore({
 });
 
 // GET /api/firestore → returns first 10 docs from the "items" collection
-export async function GET(_req: NextRequest) {
+export async function GET() {
   try {
     const snap = await db.collection('items').limit(10).get();
     const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
