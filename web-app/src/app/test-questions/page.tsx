@@ -12,6 +12,7 @@ export default function TestQuestions() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showCopied, setShowCopied] = useState(false);
   const [isInfoExpanded, setIsInfoExpanded] = useState(false);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
   const [visibleAnswerCount, setVisibleAnswerCount] = useState(0);
   const [canUndo, setCanUndo] = useState(false);
@@ -38,7 +39,7 @@ export default function TestQuestions() {
         } else {
           setQuestions(data.questions || []);
           // Initially filter to show only unguessed questions
-          const unguessedQuestions = (data.questions || []).filter(q => !q.guess);
+          const unguessedQuestions = (data.questions || []).filter((q: Question) => !q.guess);
           setFilteredQuestions(unguessedQuestions);
         }
       })
@@ -100,67 +101,94 @@ export default function TestQuestions() {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
           <h1 className="text-2xl font-bold mb-6">Practice Questions</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Path
-              </label>
-              <select
-                value={filters.path}
-                onChange={(e) => setFilters(prev => ({ ...prev, path: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 px-3 py-2"
-              >
-                <option value="">All Paths</option>
-                {uniquePaths.map(path => (
-                  <option key={path} value={path}>{path}</option>
-                ))}
-              </select>
-            </div>
+          <button
+            onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
+            className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+          >
+            <svg
+              className={`w-4 h-4 mr-1 transform transition-transform ${isFiltersExpanded ? 'rotate-90' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+            Filters
+            {(filters.path || filters.course || filters.module || filters.includeGuessed) && (
+              <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+                Active
+              </span>
+            )}
+          </button>
+          
+          {isFiltersExpanded && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pl-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Path
+                </label>
+                <select
+                  value={filters.path}
+                  onChange={(e) => setFilters(prev => ({ ...prev, path: e.target.value }))}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                >
+                  <option value="">All Paths</option>
+                  {uniquePaths.map(path => (
+                    <option key={path} value={path}>{path}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Course
-              </label>
-              <select
-                value={filters.course}
-                onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 px-3 py-2"
-              >
-                <option value="">All Courses</option>
-                {uniqueCourses.map(course => (
-                  <option key={course} value={course}>{course}</option>
-                ))}
-              </select>
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Course
+                </label>
+                <select
+                  value={filters.course}
+                  onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                >
+                  <option value="">All Courses</option>
+                  {uniqueCourses.map(course => (
+                    <option key={course} value={course}>{course}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Module
-              </label>
-              <select
-                value={filters.module}
-                onChange={(e) => setFilters(prev => ({ ...prev, module: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 px-3 py-2"
-              >
-                <option value="">All Modules</option>
-                {uniqueModules.map(module => (
-                  <option key={module} value={module}>{module}</option>
-                ))}
-              </select>
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Module
+                </label>
+                <select
+                  value={filters.module}
+                  onChange={(e) => setFilters(prev => ({ ...prev, module: e.target.value }))}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                >
+                  <option value="">All Modules</option>
+                  {uniqueModules.map(module => (
+                    <option key={module} value={module}>{module}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="flex items-center">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={filters.includeGuessed}
-                  onChange={(e) => setFilters(prev => ({ ...prev, includeGuessed: e.target.checked }))}
-                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-                />
-                <span className="text-sm font-medium text-gray-700">Include answered questions</span>
-              </label>
+              <div className="flex items-center">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={filters.includeGuessed}
+                    onChange={(e) => setFilters(prev => ({ ...prev, includeGuessed: e.target.checked }))}
+                    className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Include answered questions</span>
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="text-center py-8 text-gray-500">
             No questions match the selected filters
@@ -278,67 +306,94 @@ export default function TestQuestions() {
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <h1 className="text-2xl font-bold mb-6">Practice Questions</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Path
-            </label>
-            <select
-              value={filters.path}
-              onChange={(e) => setFilters(prev => ({ ...prev, path: e.target.value }))}
-              className="w-full rounded-md border border-gray-300 px-3 py-2"
-            >
-              <option value="">All Paths</option>
-              {uniquePaths.map(path => (
-                <option key={path} value={path}>{path}</option>
-              ))}
-            </select>
-          </div>
+        <button
+          onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
+          className="flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+        >
+          <svg
+            className={`w-4 h-4 mr-1 transform transition-transform ${isFiltersExpanded ? 'rotate-90' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+          Filters
+          {(filters.path || filters.course || filters.module || filters.includeGuessed) && (
+            <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+              Active
+            </span>
+          )}
+        </button>
+        
+        {isFiltersExpanded && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pl-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Path
+              </label>
+              <select
+                value={filters.path}
+                onChange={(e) => setFilters(prev => ({ ...prev, path: e.target.value }))}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              >
+                <option value="">All Paths</option>
+                {uniquePaths.map(path => (
+                  <option key={path} value={path}>{path}</option>
+                ))}
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Course
-            </label>
-            <select
-              value={filters.course}
-              onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
-              className="w-full rounded-md border border-gray-300 px-3 py-2"
-            >
-              <option value="">All Courses</option>
-              {uniqueCourses.map(course => (
-                <option key={course} value={course}>{course}</option>
-              ))}
-            </select>
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Course
+              </label>
+              <select
+                value={filters.course}
+                onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              >
+                <option value="">All Courses</option>
+                {uniqueCourses.map(course => (
+                  <option key={course} value={course}>{course}</option>
+                ))}
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Module
-            </label>
-            <select
-              value={filters.module}
-              onChange={(e) => setFilters(prev => ({ ...prev, module: e.target.value }))}
-              className="w-full rounded-md border border-gray-300 px-3 py-2"
-            >
-              <option value="">All Modules</option>
-              {uniqueModules.map(module => (
-                <option key={module} value={module}>{module}</option>
-              ))}
-            </select>
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Module
+              </label>
+              <select
+                value={filters.module}
+                onChange={(e) => setFilters(prev => ({ ...prev, module: e.target.value }))}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              >
+                <option value="">All Modules</option>
+                {uniqueModules.map(module => (
+                  <option key={module} value={module}>{module}</option>
+                ))}
+              </select>
+            </div>
 
-          <div className="flex items-center">
-            <label className="flex items-center space-x-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={filters.includeGuessed}
-                onChange={(e) => setFilters(prev => ({ ...prev, includeGuessed: e.target.checked }))}
-                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-              />
-              <span className="text-sm font-medium text-gray-700">Include answered questions</span>
-            </label>
+            <div className="flex items-center">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.includeGuessed}
+                  onChange={(e) => setFilters(prev => ({ ...prev, includeGuessed: e.target.checked }))}
+                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-sm font-medium text-gray-700">Include answered questions</span>
+              </label>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="mb-4">
           <button
