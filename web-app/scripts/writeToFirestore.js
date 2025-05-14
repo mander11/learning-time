@@ -1,4 +1,6 @@
 const { Firestore, FieldValue } = require('@google-cloud/firestore');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 // Initialize Firestore with env-based credentials
@@ -9,6 +11,17 @@ const db = new Firestore({
     private_key: process.env.GCP_PRIVATE_KEY?.replace(/\\n/g, '\n'),
   },
 });
+
+// Function to read questions from a JSON file
+function loadQuestionsFromFile(filePath) {
+  try {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(fileContent);
+  } catch (error) {
+    console.error(`Error loading questions from ${filePath}:`, error);
+    throw error;
+  }
+}
 
 async function writeQuestion(questionData) {
   try {
@@ -23,6 +36,8 @@ async function writeQuestion(questionData) {
     // Add timestamps
     const enrichedData = {
       ...questionData,
+      // Preserve questionOrder if it exists
+      questionOrder: questionData.questionOrder !== undefined ? questionData.questionOrder : null,
       status: questionData.status || 'pending',
       updatedAt: FieldValue.serverTimestamp(),
       createdAt: FieldValue.serverTimestamp()
@@ -37,48 +52,25 @@ async function writeQuestion(questionData) {
   }
 }
 
-// Example usage
+// Main function that accepts a file path as an argument
 async function main() {
-  const questions = [
-    {
-      path: 'GCP Professional Data Engineer',
-      course: '02 – Preparing for your Professional Data Engineer Journey',
-      courseOrder: 2,
-      module: 'Maintaining and Automating Data Workloads',
-      moduleOrder: 5,
-      question: 'You are running a Dataflow pipeline in production. The input data for this pipeline is occasionally inconsistent. Separately from processing the valid data, you want to efficiently capture the erroneous input data for analysis. What should you do?',
-      answers: {
-        A: 'Create a side output for the erroneous data.',
-        B: 'Re-read the input data and create separate outputs for valid and erroneous data.',
-        C: 'Check for the erroneous data in the logs.',
-        D: 'Read the data once, and split it into two pipelines, one to output valid data and another to output erroneous data.'
-      },
-      status: 'pending'
-    },
-    {
-      path: 'GCP Professional Data Engineer',
-      course: '02 – Preparing for your Professional Data Engineer Journey',
-      courseOrder: 2,
-      module: 'Maintaining and Automating Data Workloads',
-      moduleOrder: 5,
-      question: 'You run a Cloud SQL instance for a business that requires that the database is accessible for transactions. You need to ensure minimal downtime for database transactions. What should you do?',
-      answers: {
-        A: 'Configure replication.',
-        B: 'Configure backups and increase the number of backups.',
-        C: 'Configure high availability.',
-        D: 'Configure backups.'
-      },
-      status: 'pending'
-    }
-  ];
-
+  // Default to questions.json in the same directory if no file is specified
+  const questionFile = process.argv[2] || path.join(__dirname, 'questions.json');
+  
+  console.log(`Loading questions from: ${questionFile}`);
+  
   try {
+    const questions = loadQuestionsFromFile(questionFile);
+    console.log(`Found ${questions.length} questions to import`);
+    
     for (const question of questions) {
       await writeQuestion(question);
-      console.log('Successfully wrote question to Firestore');
+      console.log(`Successfully wrote question: "${question.question.substring(0, 50)}..."`);
     }
+    
+    console.log('All questions written to Firestore successfully');
   } catch (error) {
-    console.error('Failed to write question:', error);
+    console.error('Failed to write questions:', error);
   }
 }
 
@@ -87,4 +79,4 @@ if (require.main === module) {
   main().then(() => process.exit(0));
 }
 
-module.exports = { writeQuestion };
+module.exports = { writeQuestion, loadQuestionsFromFile };

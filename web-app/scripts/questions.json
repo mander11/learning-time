@@ -1,0 +1,18 @@
+[
+  {
+    "path": "GCP Professional Data Engineer",
+    "course": "Whizlabs Practice Test",
+    "courseOrder": 100,
+    "module": "Practice Test 1",
+    "moduleOrder": 1,
+    "question": "Domain: Design Data Processing Systems\nAn environment safety facility receives thousands of events every 60 seconds from its sensors assembled in different sectors monitoring air pollution in the region. Scientists want to access and query the data for observation and daily reporting. Due to current funding state, their budget is limited and they seek a cost-effective, highly available and ACID-compliant solution supports SQL querying.\nWhich approach would you recommend for such scenario?",
+    "answers": {
+      "A": "A. Use BigQuery to store and query the event data. Enable streaming on BigQuery for data to be loaded in real-time.",
+      "B": "B. Use Pub/Sub to stream events and ingest data into Bigquery using Bigquery Subscription",
+      "C": "C. Use Cloud SQL to load events into a relational database and allow access to scientists to query.",
+      "D": "D. Use BigQuery to store and query event data. Batch load the data to BigQuery using its API.right"
+    },
+    "questionOrder": 1,
+    "status": "pending"
+  }
+]
