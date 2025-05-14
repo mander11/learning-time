@@ -3,7 +3,7 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
-import { Firestore } from '@google-cloud/firestore';
+import { Firestore, FieldValue } from '@google-cloud/firestore';
 
 // Initialize with env-based credentials
 const db = new Firestore({
@@ -50,6 +50,42 @@ export async function GET() {
     return NextResponse.json({ questions }, { status: 200 });
   } catch (err) {
     console.error('Error fetching questions from Firestore:', err);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+// PATCH /api/questions → updates a question in Firestore
+export async function PATCH(req: Request) {
+  // Check authentication and authorization
+  const session = await getServerSession();
+  
+  // Check if user is authenticated
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized: Authentication required' }, { status: 401 });
+  }
+  
+  // Check if user's email is in the allowed list
+  const allowedEmails = getAllowedEmails();
+  if (allowedEmails.length > 0 && !allowedEmails.includes(session.user.email as string)) {
+    return NextResponse.json({ error: 'Forbidden: You don\'t have permission to access this API' }, { status: 403 });
+  }
+
+  try {
+    const { id, guess } = await req.json();
+
+    if (!id || typeof guess !== 'string') {
+      return NextResponse.json({ error: 'Invalid request: Missing id or guess' }, { status: 400 });
+    }
+
+    const docRef = db.collection('questions').doc(id);
+    await docRef.update({
+      guess,
+      updatedAt: FieldValue.serverTimestamp()
+    });
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err) {
+    console.error('Error updating question in Firestore:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

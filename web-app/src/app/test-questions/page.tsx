@@ -14,6 +14,7 @@ interface Question {
   answers: {
     [key: string]: string;
   };
+  guess?: string;
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
   updatedAt: string;
@@ -45,13 +46,19 @@ export default function TestQuestions() {
       .catch(err => setError(err.message));
   }, []);
 
-  // Reset counts when question changes
+  // Reset counts when question changes and set any saved guess
   useEffect(() => {
     setVisibleCount(0);
     setVisibleAnswerCount(0);
-    setSelectedAnswer(null);
     setCanUndo(false);
-  }, [currentIndex]);
+    
+    // If there's a saved guess for this question, show it
+    const savedGuess = questions[currentIndex]?.guess;
+    setSelectedAnswer(savedGuess || null);
+    if (savedGuess) {
+      setVisibleAnswerCount(Object.keys(questions[currentIndex].answers).length);
+    }
+  }, [currentIndex, questions]);
 
   if (error) {
     return <div className="p-4">Error: {error}</div>;
@@ -79,8 +86,27 @@ export default function TestQuestions() {
     }
   };
 
-  const handleAnswerSelect = (key: string) => {
+  const handleAnswerSelect = async (key: string) => {
     setSelectedAnswer(key);
+    
+    try {
+      const response = await fetch('/api/questions', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: currentQuestion.id,
+          guess: key,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save answer');
+      }
+    } catch (err) {
+      console.error('Error saving answer:', err);
+    }
   };
 
   const handleCopyQuestion = () => {
