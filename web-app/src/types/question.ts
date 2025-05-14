@@ -5,6 +5,7 @@ export interface Question {
   courseOrder: number;
   module: string;
   moduleOrder: number;
+  questionOrder?: number;
   question: string;
   answers: {
     [key: string]: string;
