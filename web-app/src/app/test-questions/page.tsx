@@ -6,6 +6,7 @@ import { Question } from '@/types/question';
 
 export default function TestQuestions() {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -14,6 +15,17 @@ export default function TestQuestions() {
   const [visibleCount, setVisibleCount] = useState(0);
   const [visibleAnswerCount, setVisibleAnswerCount] = useState(0);
   const [canUndo, setCanUndo] = useState(false);
+  const [filters, setFilters] = useState({
+    path: '',
+    course: '',
+    module: '',
+    includeGuessed: false,
+  });
+
+  // Get unique values for filter dropdowns
+  const uniquePaths = Array.from(new Set(questions.map(q => q.path))).sort();
+  const uniqueCourses = Array.from(new Set(questions.map(q => q.course))).sort();
+  const uniqueModules = Array.from(new Set(questions.map(q => q.module))).sort();
 
   const WORDS_PER_TAP = 4;
 
@@ -25,10 +37,38 @@ export default function TestQuestions() {
           setError(data.error);
         } else {
           setQuestions(data.questions || []);
+          // Initially filter to show only unguessed questions
+          const unguessedQuestions = (data.questions || []).filter(q => !q.guess);
+          setFilteredQuestions(unguessedQuestions);
         }
       })
       .catch(err => setError(err.message));
   }, []);
+
+  // Apply filters when questions or filters change
+  useEffect(() => {
+    let filtered = [...questions];
+
+    if (filters.path) {
+      filtered = filtered.filter(q => q.path === filters.path);
+    }
+    if (filters.course) {
+      filtered = filtered.filter(q => q.course === filters.course);
+    }
+    if (filters.module) {
+      filtered = filtered.filter(q => q.module === filters.module);
+    }
+    if (!filters.includeGuessed) {
+      filtered = filtered.filter(q => !q.guess);
+    }
+
+    setFilteredQuestions(filtered);
+    // Reset to first question when filters change
+    setCurrentIndex(0);
+    setVisibleCount(0);
+    setVisibleAnswerCount(0);
+    setSelectedAnswer(null);
+  }, [questions, filters]);
 
   // Reset counts when question changes and set any saved guess
   useEffect(() => {
@@ -37,12 +77,12 @@ export default function TestQuestions() {
     setCanUndo(false);
     
     // If there's a saved guess for this question, show it
-    const savedGuess = questions[currentIndex]?.guess;
+    const savedGuess = filteredQuestions[currentIndex]?.guess;
     setSelectedAnswer(savedGuess || null);
     if (savedGuess) {
-      setVisibleAnswerCount(Object.keys(questions[currentIndex].answers).length);
+      setVisibleAnswerCount(Object.keys(filteredQuestions[currentIndex].answers).length);
     }
-  }, [currentIndex, questions]);
+  }, [currentIndex, filteredQuestions]);
 
   if (error) {
     return <div className="p-4">Error: {error}</div>;
@@ -52,14 +92,91 @@ export default function TestQuestions() {
     return <div className="p-4">Loading questions...</div>;
   }
 
-  const currentQuestion = questions[currentIndex];
+  const currentQuestion = filteredQuestions[currentIndex];
+
+  if (!currentQuestion) {
+    return (
+      <div className="max-w-3xl mx-auto p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h1 className="text-2xl font-bold mb-6">Practice Questions</h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Path
+              </label>
+              <select
+                value={filters.path}
+                onChange={(e) => setFilters(prev => ({ ...prev, path: e.target.value }))}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              >
+                <option value="">All Paths</option>
+                {uniquePaths.map(path => (
+                  <option key={path} value={path}>{path}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Course
+              </label>
+              <select
+                value={filters.course}
+                onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              >
+                <option value="">All Courses</option>
+                {uniqueCourses.map(course => (
+                  <option key={course} value={course}>{course}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Module
+              </label>
+              <select
+                value={filters.module}
+                onChange={(e) => setFilters(prev => ({ ...prev, module: e.target.value }))}
+                className="w-full rounded-md border border-gray-300 px-3 py-2"
+              >
+                <option value="">All Modules</option>
+                {uniqueModules.map(module => (
+                  <option key={module} value={module}>{module}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-center">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.includeGuessed}
+                  onChange={(e) => setFilters(prev => ({ ...prev, includeGuessed: e.target.checked }))}
+                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-sm font-medium text-gray-700">Include answered questions</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="text-center py-8 text-gray-500">
+            No questions match the selected filters
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const words = currentQuestion.question.trim().split(/\s+/);
   const startIndex = (visibleCount - 1) * WORDS_PER_TAP;
   const visibleText = words.slice(0, startIndex + WORDS_PER_TAP).join(' ');
   const done = startIndex + WORDS_PER_TAP >= words.length;
 
   const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < filteredQuestions.length - 1) {
       setCurrentIndex(prev => prev + 1);
     }
   };
@@ -157,47 +274,79 @@ export default function TestQuestions() {
           Back to Home
         </Link>
       </div>
-      <div className="mb-4">
-        <button
-          onClick={() => setIsInfoExpanded(!isInfoExpanded)}
-          className="flex items-center text-xs text-gray-500 hover:text-gray-700 mb-2"
-        >
-          <svg
-            className={`w-4 h-4 mr-1 transform transition-transform ${isInfoExpanded ? 'rotate-90' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-          Course Info
-        </button>
+
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-2xl font-bold mb-6">Practice Questions</h1>
         
-        {isInfoExpanded && (
-          <div className="pl-5 mb-4 text-sm">
-            <p className="font-medium text-gray-700">{currentQuestion.course}</p>
-            <p className="text-gray-500">{currentQuestion.module}</p>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Path
+            </label>
+            <select
+              value={filters.path}
+              onChange={(e) => setFilters(prev => ({ ...prev, path: e.target.value }))}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              <option value="">All Paths</option>
+              {uniquePaths.map(path => (
+                <option key={path} value={path}>{path}</option>
+              ))}
+            </select>
           </div>
-        )}
-        
-        <div className="flex justify-end">
-          {showCopied && (
-            <span className="mr-2 text-sm text-green-600 bg-green-50 px-2 py-1 rounded-md">
-              Copied!
-            </span>
-          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Course
+            </label>
+            <select
+              value={filters.course}
+              onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              <option value="">All Courses</option>
+              {uniqueCourses.map(course => (
+                <option key={course} value={course}>{course}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Module
+            </label>
+            <select
+              value={filters.module}
+              onChange={(e) => setFilters(prev => ({ ...prev, module: e.target.value }))}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              <option value="">All Modules</option>
+              {uniqueModules.map(module => (
+                <option key={module} value={module}>{module}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center">
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={filters.includeGuessed}
+                onChange={(e) => setFilters(prev => ({ ...prev, includeGuessed: e.target.checked }))}
+                className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+              />
+              <span className="text-sm font-medium text-gray-700">Include answered questions</span>
+            </label>
+          </div>
+        </div>
+
+        <div className="mb-4">
           <button
-            onClick={handleCopyQuestion}
-            className="p-2 sm:p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Copy question"
+            onClick={() => setIsInfoExpanded(!isInfoExpanded)}
+            className="flex items-center text-xs text-gray-500 hover:text-gray-700 mb-2"
           >
             <svg
-              className="w-6 h-6 sm:w-5 sm:h-5"
+              className={`w-4 h-4 mr-1 transform transition-transform ${isInfoExpanded ? 'rotate-90' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -206,10 +355,45 @@ export default function TestQuestions() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                d="M9 5l7 7-7 7"
               />
             </svg>
+            Course Info
           </button>
+          
+          {isInfoExpanded && (
+            <div className="pl-5 mb-4 text-sm">
+              <p className="font-medium text-gray-700">{currentQuestion.course}</p>
+              <p className="text-gray-500">{currentQuestion.module}</p>
+            </div>
+          )}
+          
+          <div className="flex justify-end">
+            {showCopied && (
+              <span className="mr-2 text-sm text-green-600 bg-green-50 px-2 py-1 rounded-md">
+                Copied!
+              </span>
+            )}
+            <button
+              onClick={handleCopyQuestion}
+              className="p-2 sm:p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Copy question"
+            >
+              <svg
+                className="w-6 h-6 sm:w-5 sm:h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -290,13 +474,13 @@ export default function TestQuestions() {
           Previous
         </button>
         <span className="text-gray-600">
-          Question {currentIndex + 1} of {questions.length}
+          Question {currentIndex + 1} of {filteredQuestions.length}
         </span>
         <button
           onClick={handleNext}
-          disabled={currentIndex === questions.length - 1}
+          disabled={currentIndex === filteredQuestions.length - 1}
           className={`px-4 py-2 rounded ${
-            currentIndex === questions.length - 1
+            currentIndex === filteredQuestions.length - 1
               ? 'bg-gray-200 cursor-not-allowed'
               : 'bg-blue-500 hover:bg-blue-600 text-white'
           }`}
