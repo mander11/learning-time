@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Question } from '@/types/question';
+import QuestionModal from '../components/QuestionModal';
 
 export default function QuestionSummary() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [filters, setFilters] = useState({
     path: '',
     course: '',
@@ -149,7 +151,8 @@ export default function QuestionSummary() {
           {filteredQuestions.map((question) => (
             <div
               key={question.id}
-              className="border rounded-lg p-4 hover:border-blue-500 transition-colors"
+              className="border rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer"
+              onClick={() => setSelectedQuestion(question)}
             >
               <div className="flex justify-between items-start mb-2">
                 <div className="space-y-1">
@@ -160,6 +163,7 @@ export default function QuestionSummary() {
                 <Link
                   href={`/test-questions?id=${question.id}`}
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   Practice
                 </Link>
@@ -184,6 +188,12 @@ export default function QuestionSummary() {
       <div className="text-center text-gray-600">
         {filteredQuestions.length} questions shown
       </div>
+
+      <QuestionModal
+        question={selectedQuestion!}
+        isOpen={selectedQuestion !== null}
+        onClose={() => setSelectedQuestion(null)}
+      />
     </div>
   );
 }
