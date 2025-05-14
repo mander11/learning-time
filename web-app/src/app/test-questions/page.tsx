@@ -528,9 +528,6 @@ export default function TestQuestions() {
         >
           Previous
         </button>
-        <span className="text-gray-600">
-          Question {currentIndex + 1} of {filteredQuestions.length}
-        </span>
         <button
           onClick={handleNext}
           disabled={currentIndex === filteredQuestions.length - 1}
