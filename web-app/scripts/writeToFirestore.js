@@ -55,7 +55,7 @@ async function writeQuestion(questionData) {
 // Main function that accepts a file path as an argument
 async function main() {
   // Default to questions.json in the same directory if no file is specified
-  const questionFile = process.argv[2] || path.join(__dirname, 'questions.json');
+  const questionFile = path.join(__dirname, 'questions.json');
   
   console.log(`Loading questions from: ${questionFile}`);
   
