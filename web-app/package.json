@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "firestore:import": "node -r dotenv/config scripts/writeToFirestore.js dotenv_config_path=.env.local"
+    "firestore:import": "node -r dotenv/config scripts/writeToFirestore.js dotenv_config_path=.env.local",
+    "firestore:delete-whizlabs": "node -r dotenv/config scripts/deleteWhizlabsQuestions.js dotenv_config_path=.env.local"
   },
   "dependencies": {
     "@google-cloud/firestore": "^7.11.0",
