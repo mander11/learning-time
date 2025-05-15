@@ -5,11 +5,27 @@
     "courseOrder": 100,
     "module": "Practice Test 1",
     "moduleOrder": 1,
+    "question": "Domain: Design Data Processing Systems\nAn environment safety facility receives thousands of events every 60 seconds from its sensors assembled in different sectors monitoring air pollution in the region. Scientists want to access and query the data for observation and daily reporting. Due to current funding state, their budget is limited and they seek a cost-effective, highly available and ACID-compliant solution supports SQL querying.\nWhich approach would you recommend for such scenario?",
+    "answers": {
+      "A": "Use BigQuery to store and query the event data. Enable streaming on BigQuery for data to be loaded in real-time.",
+      "B": "Use Pub/Sub to stream events and ingest data into Bigquery using Bigquery Subscription",
+      "C": "Use Cloud SQL to load events into a relational database and allow access to scientists to query.",
+      "D": "Use BigQuery to store and query event data. Batch load the data to BigQuery using its API."
+    },
+    "questionOrder": 1,
+    "status": "pending"
+  },
+  {
+    "path": "GCP Professional Data Engineer",
+    "course": "Whizlabs Practice Test",
+    "courseOrder": 100,
+    "module": "Practice Test 1",
+    "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nYou have a dataflow pipeline read a CSV file daily at 6 am, applies the needed cleansing & transformation on it, and then loads it to BigQuery. Occasionally, the CSV file might be modified within the day due to human error or incomplete data. This causes you to manually re-run dataflow pipeline again. Is there a way to ensure that the Dataflow pipeline automatically re-runs when the CSV file is modified due to human error or incomplete data, thus achieving a more efficient solution?",
     "answers": {
       "A": "Use Cloud Scheduler to re-run dataflow after 6 am. Check what is the average time the file is modified and schedule based on it",
-      "B": "Create a Cloud Function that is triggered when an object is modified in a Google Cloud Storage (GCS) bucket. The Cloud Function will then trigger a Dataflow pipeline to reprocess the data in the modified CSV fileright",
-      "C": "Use Cloud Composer to rerun dataflow and reprocess the file. Create a custom sensor to detect file conditions if changedwrong",
+      "B": "Create a Cloud Function that is triggered when an object is modified in a Google Cloud Storage (GCS) bucket. The Cloud Function will then trigger a Dataflow pipeline to reprocess the data in the modified CSV file",
+      "C": "Use Cloud Composer to rerun dataflow and reprocess the file. Create a custom sensor to detect file conditions if changed",
       "D": "Use a compute engine to schedule a cron job to run every 10 minutes to check if the file was modified to rerun dataflow"
     },
     "questionOrder": 2,
@@ -23,7 +39,7 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nA dairy products company is using sensors installed around different areas in its farms to monitor employees activities and detect any intruders. Apache Kafka cluster is used to gather the events coming from sensors. Recently, Kafka cluster is becoming a bottleneck causing lag in receiving sensor events. Turns out sensors are sending more frequent events and due to the company expanding with more farms, more sensors are installed and this will cause extra load on the cluster.\nWhat is the most resilient approach to solve this issue?",
     "answers": {
-      "A": "Use pub/sub to ingest and stream sensor events.right",
+      "A": "Use pub/sub to ingest and stream sensor events.",
       "B": "Scale out Kafka cluster to withstand the continuously flowing event stream.",
       "C": "Spin up a new Kafka cluster and distribute sensors even streams between the two clusters.",
       "D": "Deploy Confluent’s Managed Apache Kafka Cluster from the marketplace to scale the cluster according to workload"
@@ -42,7 +58,7 @@
       "A": "Increase timeout for API at peak times to 120 seconds. If it keeps failing, try increasing the timeout until the issue is resolved.",
       "B": "Build a Dataflow pipeline to generate daily reports of users’ activity logs. Users can download those daily reports whenever they want to.",
       "C": "Migrate data source to Cloud Spanner for horizontal scaling to avoid query timeouts.",
-      "D": "Use Pub/Sub to receive requests for activity logs from users. Deploy a Cloud Function with a Pub/Sub trigger to generate the reports and store them in a GCS bucket. Then, send temporary download links to the users via email.right"
+      "D": "Use Pub/Sub to receive requests for activity logs from users. Deploy a Cloud Function with a Pub/Sub trigger to generate the reports and store them in a GCS bucket. Then, send temporary download links to the users via email."
     },
     "questionOrder": 4,
     "status": "pending"
@@ -58,7 +74,7 @@
       "A": "Use Dataproc to process the data. Store data in Google Storage",
       "B": "Build a Dataflow pipeline. Store the data in Google Storage. Use Cloud Compute to launch instances and install the required dependencies for processing the data",
       "C": "Use Dataproc to process the data. Store data in Dataproc’s HDFS",
-      "D": "To process your data quickly and affordably, use a Dataproc cluster with preemptible VMs. Then, store the processed data in Google Cloud Storage, and use object lifecycle management to automatically manage the data's lifecycleright"
+      "D": "To process your data quickly and affordably, use a Dataproc cluster with preemptible VMs. Then, store the processed data in Google Cloud Storage, and use object lifecycle management to automatically manage the data's lifecycle"
     },
     "questionOrder": 5,
     "status": "pending"
@@ -73,7 +89,7 @@
     "answers": {
       "A": "Launch a Dataproc cluster in high-availability mode with using high-memory worker machine types.",
       "B": "Launch a Dataproc cluster in standard mode with using high-CPU worker machine types.",
-      "C": "Launch a Dataproc cluster in standard mode with using high-memory worker machine types.right",
+      "C": "Launch a Dataproc cluster in standard mode with using high-memory worker machine types.",
       "D": "Advice the data analysts to use Dataprep for their data manipulation."
     },
     "questionOrder": 6,
@@ -87,7 +103,7 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nYou have several Data Studio reports reading from BigQuery. Those reports are used to visualize several metrics for marketing team. Data visualized is updated only once a day. You notice that reports running queries on BigQuery are not free and they cost for each query. You want to control and minimize the costs caused by frequent queries coming from Data Studio dashboards.\nWhat should you do?",
     "answers": {
-      "A": "Enable caching on reports for reading from BigQuery. No need to change the credentials.right",
+      "A": "Enable caching on reports for reading from BigQuery. No need to change the credentials.",
       "B": "Grant owner credentials for the reports on BigQuery datasets and enable caching.",
       "C": "Configure reports data sources to update data every 24 hours only.",
       "D": "Export data as CSV files to Google Storage every 24 hours and change reports data source to read from those files."
@@ -103,10 +119,10 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nYou are using BigQuery as the data warehouse. Data analysts & scientists run queries to get data from BigQuery. When you checked the billing costs for the previous month, you noticed a spike in running queries on BigQuery despite the caching is enabled. You tried to find out the reason for the spike by reading some of the queries data analysts and scientists are running on BigQuery.\nWhich of the following can be the reason for increased bigquery costs? (Select THREE)",
     "answers": {
-      "A": "Queries use current_timestamp functionright",
-      "B": "SELECT queries with asterisk (*)right",
+      "A": "Queries use current_timestamp function",
+      "B": "SELECT queries with asterisk (*)",
       "C": "Queries select from authorized views on archive tables",
-      "D": "Querying multiple tables using a wildcardright"
+      "D": "Querying multiple tables using a wildcard"
     },
     "questionOrder": 8,
     "status": "pending"
@@ -121,8 +137,8 @@
     "answers": {
       "A": "Use Google Kubernetes Engine to deploy the model. Use online prediction to pass input data to the model hosted in cloud.",
       "B": "Use Google Kubernetes Engine to deploy the model. Use batch prediction to pass input data to the model hosted in cloud.",
-      "C": "Use Vertex AI to deploy the model. Use batch prediction to pass input data to the model hosted in cloud.",
-      "D": "Use Vertex AI to deploy the model. Use online prediction to pass input data to the model hosted in cloud.right"
+      "C": "Use Vertex AI to deploy the model. Use batch prediction to pass input data to the model hosted in cloud.",
+      "D": "Use Vertex AI to deploy the model. Use online prediction to pass input data to the model hosted in cloud."
     },
     "questionOrder": 9,
     "status": "pending"
@@ -136,7 +152,7 @@
     "question": "Domain: Design Data Processing Systems\nYou have a massively multiplayer online (MMO) game which sends events from each player every 10 seconds. Events contain stats about the player session’s state (play, idle, off) as well as ping duration. You want to use Dataflow for windowing. The purpose is to aggregate events and extracting stats to detect how many players are currently online and what is the average ping duration for each server in a time window of 30 seconds.\nWhich windowing function you should choose to design the pipeline?",
     "answers": {
       "A": "Tumbling window",
-      "B": "Hopping windowright",
+      "B": "Hopping window",
       "C": "Session window",
       "D": "Global window"
     },
@@ -153,7 +169,7 @@
     "answers": {
       "A": "Tumbling window with duration of 10 minutes",
       "B": "Hopping window with a duration of 10 minutes",
-      "C": "Session window with a time gap duration of 10 minutesright",
+      "C": "Session window with a time gap duration of 10 minutes",
       "D": "Global window with time-based trigger of 10 minutes"
     },
     "questionOrder": 11,
@@ -167,9 +183,9 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nYou have several Dataflow pipelines streaming data for transformation and further analysis. At one point of the transformation, there is a need for two pipelines to share data among pipeline instances. You need to modify the architecture to allow data sharing between different pipelines.\nHow should this requirement be met in Google Cloud?",
     "answers": {
-      "A": "Enable data sharing option when creating Dataflow pipeline.wrong",
+      "A": "Enable data sharing option when creating Dataflow pipeline.",
       "B": "Grant pipeline instances the right IAM roles to access other pipelines instances for data sharing.",
-      "C": "Use Google Storage to share data with other pipeline instances.right",
+      "C": "Use Google Storage to share data with other pipeline instances.",
       "D": "Data sharing among Dataflow pipelines is only possible if instances reside in same region."
     },
     "questionOrder": 12,
@@ -183,9 +199,9 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nYou are building a data pipeline using Google Dataflow SDK. This pipeline is going to perform operations on data using conditional and for loops creating a branch pipeline.\nWhich of the following concepts should be used to achieve this?",
     "answers": {
-      "A": "ParDowrong",
+      "A": "ParDo",
       "B": "PCollection",
-      "C": "PTransformright",
+      "C": "PTransform",
       "D": "Pipeline"
     },
     "questionOrder": 13,
@@ -201,7 +217,7 @@
     "answers": {
       "A": "Appliance Transfer Service",
       "B": "gsutil",
-      "C": "Storage Transfer Serviceright",
+      "C": "Storage Transfer Service",
       "D": "Dataflow"
     },
     "questionOrder": 14,
@@ -218,7 +234,7 @@
       "A": "Install Google Storage gsutil tool on servers and copy the data from HDFS to Google Storage.",
       "B": "Use Cloud Data Transfer Service to migrate the data to Google Storage.",
       "C": "Import the data from HDFS to BigQuery. Then, export the data to Google Storage in AVRO format.",
-      "D": "Use Transfer Appliance Service to migrate the data to Google Storage.right"
+      "D": "Use Transfer Appliance Service to migrate the data to Google Storage."
     },
     "questionOrder": 15,
     "status": "pending"
@@ -233,7 +249,7 @@
     "answers": {
       "A": "Cloud Monitoring can detect and receive application performance stats from virtual machines automatically.",
       "B": "Install Cloud Monitoring MySQL plugin. No extra steps are required.",
-      "C": "Install Cloud Monitoring MySQL plugin. Create a user for the Cloud Monitoring plugin in MySQL database with the required permissions to run the SHOW_STATUS command.right",
+      "C": "Install Cloud Monitoring MySQL plugin. Create a user for the Cloud Monitoring plugin in MySQL database with the required permissions to run the SHOW_STATUS command.",
       "D": "Install Prometheus on a different virtual machine. Allow Prometheus access to MySQL database to collect data. Create a dashboard on Prometheus to monitor database’s performance and availability."
     },
     "questionOrder": 16,
@@ -249,7 +265,7 @@
     "answers": {
       "A": "Set project-level quotas on BigQuery by setting a fixed size limit to be used monthly.",
       "B": "Set monthly flat-rate pricing for BigQuery.",
-      "C": "Set user-level custom quotas to all users with access to BigQueryright",
+      "C": "Set user-level custom quotas to all users with access to BigQuery",
       "D": "Separate datasets to different projects to benefit from monthly free tier."
     },
     "questionOrder": 17,
@@ -263,9 +279,9 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nYou have been using BigTable instance with HDD as storage type. You want to increase the performance of the instance by changing the storage type to SSD. You want to make sure the data will not be lost. How can you achieve that?",
     "answers": {
-      "A": "Export the data to Cloud Storage in Avro format using Dataflow template and import data into new BigTable instance using Dataflow GCS Avro to BigTableright",
+      "A": "Export the data to Cloud Storage in Avro format using Dataflow template and import data into new BigTable instance using Dataflow GCS Avro to BigTable",
       "B": "From Google Cloud console UI, you can switch the storage type from HDD to SDD. Data will be moved to new storage type. Instance will be inaccessible by this time until migration is complete.",
-      "C": "From Google Cloud console UI, you can switch the storage type from HDD to SDD. Data will be moved to new storage type. Instance will be in read-only mode by this time until migration is complete.wrong",
+      "C": "From Google Cloud console UI, you can switch the storage type from HDD to SDD. Data will be moved to new storage type. Instance will be in read-only mode by this time until migration is complete.",
       "D": "﻿﻿﻿From the Google Cloud console UI, you can switch the storage type from HDD to SDD. Data will be moved to a new storage type. Instance will be in write-only mode by this time until the migration is complete."
     },
     "questionOrder": 18,
@@ -280,7 +296,7 @@
     "question": "Domain: Design Data Processing Systems\nYou use BigQuery as the main data warehouse. You decided to perform advanced data transformation of the data. You want to use Dataproc with Apache Spark to do the transformation. How can you enable Dataproc’s access to data in BigQuery?",
     "answers": {
       "A": "Install Dataproc’s BigQuery connector on the cluster using initialization actions. Dataproc temporarily loads data from BigQuery to Google Storage. If failed, Dataproc deletes temp files before finishing the job.",
-      "B": "Install Dataproc’s BigQuery connector on the cluster using initialization actions. Dataproc temporarily loads data from BigQuery to Google Storage. If failed, you need to manually delete temp files.right",
+      "B": "Install Dataproc’s BigQuery connector on the cluster using initialization actions. Dataproc temporarily loads data from BigQuery to Google Storage. If failed, you need to manually delete temp files.",
       "C": "Dataproc cannot directly connect to BigQuery. You should export data from BigQuery to Google Storage first. Dataproc can then read data from Google Storage. You need to manually delete data files after Dataproc is done.",
       "D": "Dataproc can connect to BigQuery if you set the cluster as owner to the dataset."
     },
@@ -297,7 +313,7 @@
     "answers": {
       "A": "Cloud Functions",
       "B": "Compute Engine",
-      "C": "Cloud Schedulerright",
+      "C": "Cloud Scheduler",
       "D": "Cloud Composer"
     },
     "questionOrder": 20,
@@ -311,10 +327,10 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nAn online retail company uses BigQuery to store its session logs generated by visitors browsing its website. The marketing team wants to know who are the visitors potential to buy from the online store. This is to focus their marketing efforts on those visitors instead of mass marketing over 100,000 visitors a month. You want to build a logistic regression model to predict visitors willing to buy from the company’s products using the logs stored in BigQuery. What should you do?",
     "answers": {
-      "A": "Use Vertex AI to build a model using TensorFlow allowing permission to the engine’s service account to read from BigQuery.wrong",
+      "A": "Use Vertex AI to build a model using TensorFlow allowing permission to the engine’s service account to read from BigQuery.",
       "B": "Use Dataproc to build a logistic regression model using Spark MLLib. Install Dataproc-BigQuery connector for the cluster to access session logs.",
-      "C": "Use BigQuery ML by building a model and specifying the model type as logistic regression and the labels.right",
-      "D": "After building a logistic regression model using TensorFlow, export session logs data from BigQuery to Google Storage. Deploy the cluster to Vertex AI and allow its service account to read data from Google Storage."
+      "C": "Use BigQuery ML by building a model and specifying the model type as logistic regression and the labels.",
+      "D": "After building a logistic regression model using TensorFlow, export session logs data from BigQuery to Google Storage. Deploy the cluster to Vertex AI and allow its service account to read data from Google Storage."
     },
     "questionOrder": 21,
     "status": "pending"
@@ -327,7 +343,7 @@
     "moduleOrder": 1,
     "question": "Domain: Design Data Processing Systems\nA FinTech company has over 20TB of data in ORC format stored in on-premise disks. The CTO decides to migrate the current infrastructure to Google Cloud. The current data pipeline cleanses and transforms raw data for reporting and further analysis and prediction using Apache Hive & Spark.\nWhich of the following Google Cloud products you should use?",
     "answers": {
-      "A": "Dataproc for processing and Cloud Storage for storing data.right",
+      "A": "Dataproc for processing and Cloud Storage for storing data.",
       "B": "Dataproc for processing, BigQuery for storage, Dataflow for data pipeline.",
       "C": "App Engine for processing, Google Storage for storing data, Dataflow for data pipeline.",
       "D": "Dataproc for processing, Dataproc local HDFS for storage, Dataflow for data pipeline."
@@ -343,9 +359,9 @@
     "moduleOrder": 1,
     "question": "Domain: Store the data\nA weather forecasting facility receives events from its 25,000 sensors every 10 seconds. Those events are stored in Google Storage in JSON format. Events can have different attributes based on purpose, location, and brand. The Data Science team wants to apply SQL queries to this data for further transformation and forecasting analysis.\nWhich of the following approaches satisfy the Data Scientist's request?",
     "answers": {
-      "A": "Load the data directly to BigQuery with enabling “auto-detect” option",
+      "A": "Load the data directly to BigQuery with enabling  “auto-detect” option",
       "B": "Build a dataflow pipeline to read JSON data, and transform it and then load the data to BigQuery",
-      "C": "Create an External table in Bigqueryright",
+      "C": "Create an External table in Bigquery",
       "D": "Use Dataproc cluster and create Hive external clusters on the data for data scientists to query data"
     },
     "questionOrder": 23,
@@ -361,7 +377,7 @@
     "answers": {
       "A": "Google Storage",
       "B": "Cloud Spanner",
-      "C": "BigTableright",
+      "C": "BigTable",
       "D": "Datastore"
     },
     "questionOrder": 24,
@@ -377,8 +393,8 @@
     "answers": {
       "A": "Use Google Storage to store data. Use Dataproc with Apache Hive to do required queries on data.",
       "B": "Use Cloud SQL as a database. Make sure you launch a multi-regional instance for higher peformance.",
-      "C": "Use BigTable as a database. Use short & wide tables when designing the schema and row key.wrong",
-      "D": "Use BigTable as a database. Use tall & narrow tables when designing the schema and row key.right"
+      "C": "Use BigTable as a database. Use short & wide tables when designing the schema and row key.",
+      "D": "Use BigTable as a database. Use tall & narrow tables when designing the schema and row key."
     },
     "questionOrder": 25,
     "status": "pending"
@@ -391,8 +407,8 @@
     "moduleOrder": 1,
     "question": "Domain: Store the data\nA company wants to use NoSQL database for storing its system logs. The system can generate thousands of logs every minute. Those logs are occasionally read by security team in case of possible anomaly behavior or developers for debugging purposes. Due to system’s architecture, system logs are not structured and can be different between different components.\nWhich database do you suggest be used for this scenario?",
     "answers": {
-      "A": "Use BigTable as a database with HDD storage to store system logs.right",
-      "B": "Use BigTable as a database with SSD storage to store system logs.wrong",
+      "A": "Use BigTable as a database with HDD storage to store system logs.",
+      "B": "Use BigTable as a database with SSD storage to store system logs.",
       "C": "Use Datastore as a database to store system logs.",
       "D": "Use Firebase as a database to store system logs."
     },
@@ -407,7 +423,7 @@
     "moduleOrder": 1,
     "question": "Domain: Store the data\nYou design a pipeline for your company. You want to find a solution to store event data generated in CSV format. The goal is to query data using SQL over time window.\nWhich storage and schema design should you use recommended by Google?",
     "answers": {
-      "A": "Use Google Storage to store event data and use BigQuery to create external tables referencing event data and partitioned by time window.right",
+      "A": "Use Google Storage to store event data and use BigQuery to create external tables referencing event data and partitioned by time window.",
       "B": "Use Google Storage to store event data and use DataPrep jobs to partition data by time windows and load partitioned data into Cloud SQL.",
       "C": "Use BigTable for storage and design tall and narrow tables adding each event as single row.",
       "D": "Use BigTable for storage and design short and wide tables adding each event as single row."
@@ -426,7 +442,7 @@
       "A": "Cloud Spanner",
       "B": "BigQuery",
       "C": "Datastore",
-      "D": "BigTableright"
+      "D": "BigTable"
     },
     "questionOrder": 28,
     "status": "pending"
@@ -441,7 +457,7 @@
     "answers": {
       "A": "Batch load the data from Google Storage into BigQuery using its batch API, run cleansing and transformation queries on data and insert the transformed rows to another BigQuery table.",
       "B": "Batch load the data from Google Storage into BigQuery using its batch API, run cleansing and transformation queries on data and export the data to Google Storage. Launch Dataproc cluster and use Hive to query the transformed data.",
-      "C": "Create external tables on data using BigQuery, apply the cleansing and transformation queries on data then load the output to an internal BigQuery table for reporting and visualization.right",
+      "C": "Create external tables on data using BigQuery, apply the cleansing and transformation queries on data then load the output to an internal BigQuery table for reporting and visualization.",
       "D": "Create external tables on data using BigQuery, apply the cleansing and transformation queries on data then load the output to BigTable for reporting and visualization."
     },
     "questionOrder": 29,
@@ -455,8 +471,8 @@
     "moduleOrder": 1,
     "question": "Domain: Store the data\nYou want to import data into BigQuery. You select a CSV file to upload and enable \"automatically detect\" for BigQuery to predict the schema of the table. When you checked the data, you found a skew in data and it did not match with the file you uploaded. What is the reason for this?",
     "answers": {
-      "A": "Field separator/delimiter is not ','",
-      "B": "The file is not UTF-8 encoded, so you have to provide its encodingright",
+      "A": "Field separator/delimiter  is not ','",
+      "B": "The file is not UTF-8 encoded, so you have to provide its encoding",
       "C": "File is corrupted",
       "D": "All of the Above"
     },
@@ -474,7 +490,7 @@
       "A": "Scale up Cloud SQL instance to high CPU machine type.",
       "B": "Enable high availability on Cloud SQL instance by creating a read replica.",
       "C": "Migrate the database to BigQuery and use it as the main data storage instead.",
-      "D": "Enable high availability on Cloud SQL instance by creating a fail-over replica.right"
+      "D": "Enable high availability on Cloud SQL instance by creating a fail-over replica."
     },
     "questionOrder": 31,
     "status": "pending"
@@ -487,12 +503,12 @@
     "moduleOrder": 1,
     "question": "Domain: Store the data\nYour team is planning to perform tests on Cloud BigTable instance to ensure the performance quality of the BigTable instance to be used in production. Which of the following conditions should be met to consider the performance testing valid? (Choose 3)",
     "answers": {
-      "A": "Use development instance for testing.wrong",
-      "B": "Run a heavy pre-test for several minutes before the test starts.right",
+      "A": "Use development instance for testing.",
+      "B": "Run a heavy pre-test for several minutes before the test starts.",
       "C": "Scale up the instance just before the test starts.",
-      "D": "Use at least 400GB of data.right",
-      "E": "E. Do not scale up the instance just before the test starts.right",
-      "F": "F. Test should take no longer than 10 minutes."
+      "D": "Use at least 400GB of data.",
+      "E": "Do not scale up the instance just before the test starts.",
+      "F": "Test should take no longer than 10 minutes."
     },
     "questionOrder": 32,
     "status": "pending"
@@ -505,12 +521,12 @@
     "moduleOrder": 1,
     "question": "Domain: Store the data\nYour team decided to use BigTable for storing event data. The engineer responsible of launching and testing the instance has reported a slower performance than expected by Google Cloud documentation. Which of the following could be a factor for the slow performance? (Choose 3)",
     "answers": {
-      "A": "The rows in the tables tested contain high number of cells.right",
-      "B": "The rows in the tables have large data size.right",
+      "A": "The rows in the tables tested contain high number of cells.",
+      "B": "The rows in the tables have large data size.",
       "C": "Test data size is over 300GB.",
       "D": "The instance uses SSD storage type.",
-      "E": "E. Heavy pre-test was done before the testing started.",
-      "F": "F. The instance doesn’t have enough nodes.right"
+      "E": "Heavy pre-test was done before the testing started.",
+      "F": "The instance doesn’t have enough nodes."
     },
     "questionOrder": 33,
     "status": "pending"
@@ -524,7 +540,7 @@
     "question": "Domain: Ingest and process the data\nA fast-food chain restaurant wants to detect the different meal photos its customers upload to the different social media platforms tagged with their name in order to know what meals customers like and share the most for better quality analysis.\nIt asks your advice on developing such solution for them. However, they want it to be available and in production the soonest possible because they expect a high activity on their social media pages by the next public holiday which is coming in 2 weeks and marketing team finds it a great opportunity to receive feedback based on what customers say online.\nWhat is the best approach for this?",
     "answers": {
       "A": "Use AutoML Vision to build and train the model by using all the training photos you collected from food-chain’s social media pages for better results.",
-      "B": "Use AutoML Vision to build and train the model by using 50-70% of training photos you collected from food-chain’s social media pages while the rest of training set is to test and tune the model.right",
+      "B": "Use AutoML Vision to build and train the model by using 50-70% of training photos you collected from food-chain’s social media pages while the rest of training set is to test and tune the model.",
       "C": "Use Dataproc to build the model using SparkML. Use 50-70% of training photos you collected to train the model and the rest to test and tune the model. Deploy the model using Vertex AI.",
       "D": "Use Vertex AI with TensorFlow to build the model. Use all training photos you collected to train the model. Deploy the model using Vertex AI."
     },
@@ -539,8 +555,8 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nA video-on-demand company wants to generate subtitles for its content on the web. They have over 20,000 hours of content to be subtitled and their current subtitle team cannot catch up with the every- growing video hours the content team keep adding to the website library. They want a solution to automate this as man power can be expensive and may take long time.\nWhich service of the following can greatly help the automation of video subtitles?",
     "answers": {
-      "A": "Cloud Natural Language.wrong",
-      "B": "Cloud Speech-to-Text.right",
+      "A": "Cloud Natural Language.",
+      "B": "Cloud Speech-to-Text.",
       "C": "AutoML Vision API.",
       "D": "Vertex AI"
     },
@@ -556,7 +572,7 @@
     "question": "Domain: Ingest and process the data\nA financial services firm providing products such as credit cards and bank loans receives thousands of online applications from clients applying for their products. Because it takes a lot of effort to scan and check all applications if they meet the minimum requirements for the products they are applying for, they want to build a machine learning model takes application fields like annual income, marital status, date of birth, occupation and other attributes as input and finds out if the applicant is qualified for the product the client applies for.\nWhat is the machine learning technique will help build such model?",
     "answers": {
       "A": "Regression",
-      "B": "Classificationright",
+      "B": "Classification",
       "C": "Clustering",
       "D": "Reinforcement learning"
     },
@@ -571,9 +587,9 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nYou have built a machine learning model to classify if a customer would buy a certain product when recommended by the company’s website. You trained the model with a sample set. Upon testing the model, you found out only 28% of the testing sets are actually true positives and the model isn’t very accurate. You figured out the model is over-fitted. How would you solve this?",
     "answers": {
-      "A": "Increase training data, increase feature parameters & increase L1 regularization.",
-      "B": "Decrease training data, decrease feature parameters & increase L1 regularization.wrong",
-      "C": "Increase training data, decrease feature parameters & increase L1 regularization.right",
+      "A": "Increase training data, increase feature parameters & increase L1  regularization.",
+      "B": "Decrease training data, decrease feature parameters & increase L1 regularization.",
+      "C": "Increase training data, decrease feature parameters & increase L1 regularization.",
       "D": "Increase training data, decrease feature parameters & decrease L1 regularization."
     },
     "questionOrder": 37,
@@ -587,9 +603,9 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nData scientists are testing a TensorFlow model on Google Cloud using four NVIDIA Tesla P100 GPUs to test a TensorFlow model. After experimenting with several use cases, they decide to scale up by using a different machine type for testing. As a data engineer, you are responsible of assisting with choosing the right machine type to reach a better model performance. What should you do?",
     "answers": {
-      "A": "Use TPU machine type for testing the TensorFlow on.right",
+      "A": "Use TPU machine type for testing the TensorFlow on.",
       "B": "Scale up machine type by using NVIDIA Tesla V100 GPUs.",
-      "C": "Use 8 NVIDIA Tesla K80 GPUs instead of the current 4 P100 GPUs.wrong",
+      "C": "Use 8 NVIDIA Tesla K80 GPUs instead of the current 4 P100 GPUs.",
       "D": "Increase number of Tesla P100 GPUs used until test results return satisfactory performance."
     },
     "questionOrder": 38,
@@ -604,8 +620,8 @@
     "question": "Domain: Ingest and process the data\nYou are building a machine learning model to solve a classification problem. The model should identify if a patient has a tumor. Based on statistics, only 1.4% of scanned patients are identified positive for tumor.\nYou want to make sure the machine learning model is able to correctly identify patients with tumor. What is the technique to examine the effectiveness of the model?",
     "answers": {
       "A": "Gradient Descent",
-      "B": "Precisionwrong",
-      "C": "Recallright",
+      "B": "Precision",
+      "C": "Recall",
       "D": "Dropout"
     },
     "questionOrder": 39,
@@ -619,10 +635,10 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nYou are building a machine learning classification model using TensorFlow. You trained the model by using 70% of the total set available for training, validation and testing. After testing the model, AUC returned from the test results was 0.68. The main issue here is due to overfitting. You want to increase the AUC for better accuracy of results. What should you do?",
     "answers": {
-      "A": "Increase regularization.right",
+      "A": "Increase regularization.",
       "B": "Reduce samples used for training.",
       "C": "Reduce regularization.",
-      "D": "Increase feature parameters.wrong"
+      "D": "Increase feature parameters."
     },
     "questionOrder": 40,
     "status": "pending"
@@ -635,9 +651,9 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nYou are training a Tensorflow deep neural network model. The model should recognize different type of cars and return the brand and type of the car from the image input. While training, you decided to perform hyper-parameter tuning to optimize the model.\nWhich of the variables are used for hyperparameter tuning? (Choose 2)",
     "answers": {
-      "A": "Number of nodes in hidden layersright",
+      "A": "Number of nodes in hidden layers",
       "B": "Number of features",
-      "C": "Number of hidden layersright",
+      "C": "Number of hidden layers",
       "D": "Weight values"
     },
     "questionOrder": 41,
@@ -669,8 +685,8 @@
     "answers": {
       "A": "Upload SavedModel object to Google Storage. Use Dataproc with Spark ML to use the model by accessing it using Google Storage Connector.",
       "B": "Deploy the model to Google Kubernetes Engine after wrapping SavedModel as docker image and uploading it to Google Container Registry.",
-      "C": "Deploy the model to ML module in GCP after asking the data science team to convert the model to binary format using PyTorch.",
-      "D": "Deploy the model exported as SavedModel directly to Vertex AI in GCP.right"
+      "C": "Deploy the model to ML module in GCP after asking the data science team to convert the model to binary format using PyTorch.",
+      "D": "Deploy the model exported as SavedModel directly to Vertex AI in GCP."
     },
     "questionOrder": 43,
     "status": "pending"
@@ -683,10 +699,10 @@
     "moduleOrder": 1,
     "question": "Domain: Ingest and process the data\nYou are asked by the data science team to deploy their Tensorflow deep neural network model to the cloud. You choose the ML model in the GCP cloud. Upon checking the available tiers, you suggested choosing a custom tier by launching a cluster with custom specifications to cover the requirements provided to deploy the model.\nWhich of the following specifications you can set for the ML Model cluster? (Choose TWO)",
     "answers": {
-      "A": "workerCountright",
-      "B": "masterCountwrong",
+      "A": "workerCount",
+      "B": "masterCount",
       "C": "masterCPU",
-      "D": "workerTyperight"
+      "D": "workerType"
     },
     "questionOrder": 44,
     "status": "pending"
@@ -700,7 +716,7 @@
     "question": "Domain: Prepare and use data for analysis\nYou launched a Dataproc cluster to perform some Apache Spark jobs. You are looking for a method to securely transfer web traffic data between your machine’s web browser and Dataproc cluster.\nHow can you achieve this?",
     "answers": {
       "A": "FTP connection",
-      "B": "SSH tunnelright",
+      "B": "SSH tunnel",
       "C": "VPN connection",
       "D": "Incognito mode"
     },
@@ -715,9 +731,9 @@
     "moduleOrder": 1,
     "question": "Domain: Prepare and use data for analysis\nThere is a plan by the data team to migrate the data warehouse to BigQuery. After the migration is done, you are tasked to assign each user the right role to access datasets in BigQuery. You have the following teams need to access the data warehouse:\nData analysts: They need read/write access to data. They should not create or delete datasets.\nData engineers: They are admins in the data warehouse. They need full privileges on data sets.\nDev team: They need read access only to the datasets. They can list the project’s data sets and tables.\nHow would you assign the roles to each team?",
     "answers": {
-      "A": "Assign admin role to data engineer group. Assign dataOwner role to data analyst group. Assign dataViewer role to dev team group.",
+      "A": "Assign admin role to data engineer group. Assign dataOwner role to data analyst group. Assign dataViewer role to dev team group.",
       "B": "Assign dataOwner role to data engineer group. Assign dataEditor role to data analyst group. Assign user role to dev team group.",
-      "C": "Assign admin role to data engineer group. Assign dataEditor role to data analyst group. Assign dataViewer role to dev team group.right",
+      "C": "Assign admin role to data engineer group. Assign dataEditor role to data analyst group. Assign dataViewer role to dev team group.",
       "D": "Assign dataOwner role to data engineer group. Assign dataEditor role to data analyst group. Assign dataViewer role to dev team group."
     },
     "questionOrder": 46,
@@ -731,7 +747,7 @@
     "moduleOrder": 1,
     "question": "Domain: Prepare and use data for analysis\nYour company uses BigQuery as the main data warehouse. A data warehouse is divided into several datasets based on data origin and profile. Data analysts want to access certain data that resides in a dataset considered sensitive and should not be openly available to all users. The security team allows only certain tables with limited columns for data analysts to read from.\nWhich of the following actions will you take?",
     "answers": {
-      "A": "Create a new dataset in BigQuery. Create authorized views on tables data analysts want to read from. Grant viewer role to data analysts on a new dataset.right",
+      "A": "Create a new dataset in BigQuery. Create authorized views on tables data analysts want to read from. Grant viewer role to data analysts on a new dataset.",
       "B": "Create authorized views on tables, the data analysts want to read from on the same dataset tables reside in. Grant viewer role to the Data analysts team on the views.",
       "C": "Grant data analysts viewer the role of these specific tables by specifying what columns to be read from.",
       "D": "Create a new dataset in BigQuery. Grant viewer role to data analysts on the new dataset. Copy the tables from the current dataset to the new one with only columns allowed."
@@ -747,10 +763,10 @@
     "moduleOrder": 1,
     "question": "Domain: Prepare and use data for analysis\nYou are writing highly-confidential data related to customers’ personally identifiable information (PII). The security team is concerned about how secure the network connection between the instances and Google Storage buckets. Security team proposes to use encryption keys generated by security team.\nThose keys will be rotated every 30 days for more security.\nAs a data engineer, what should you do to satisfy security team’s requirement?",
     "answers": {
-      "A": "Upload encryption key provided by security team to Cloud Key Management Service (KMS) and use the key to encrypt data when writing to Google Storage.wrong",
+      "A": "Upload encryption key provided by security team to Cloud Key Management Service (KMS) and use the key to encrypt data when writing to Google Storage.",
       "B": "Create symmetric keys using Cloud Key Management Service (KMS) and use those to encrypt data when writing to Google Storage. Create new keys every 30 days.",
       "C": "Create asymmetric keys using Cloud Key Management Service (KMS) and use those to encrypt data when writing to Google Storage. Create new keys every 30 days.",
-      "D": "Supply the encryption key provided by security team and reference it as part of the API service calls to encrypt data in Cloud Storage.right"
+      "D": "Supply the encryption key provided by security team and reference it as part of the API service calls to encrypt data in Cloud Storage."
     },
     "questionOrder": 48,
     "status": "pending"
@@ -765,7 +781,7 @@
     "answers": {
       "A": "Data will be lost",
       "B": "Recover data from Cloud Storage when the node comes back online",
-      "C": "Data will not be lostright",
+      "C": "Data will not be lost",
       "D": "Data will be transferred automatically to new node"
     },
     "questionOrder": 49,
@@ -781,7 +797,7 @@
     "answers": {
       "A": "Use Select * FROM `customer`",
       "B": "Use Select * EXCLUDE (A11, B11, B6 , C7, D9, E1, P1,Q2, R2,Z5) FROM `customer`",
-      "C": "Use Select * EXCEPT (A11, B11, B6 , C7, D9, E1, P1,Q2, R2,Z5) FROM `customer`right",
+      "C": "Use Select * EXCEPT (A11, B11, B6 , C7, D9, E1, P1,Q2, R2,Z5) FROM `customer`",
       "D": "Use Select A11, B11, B6 , C7, D9, E1, P1,Q2, R2,Z5 FROM `customer`"
     },
     "questionOrder": 50,
